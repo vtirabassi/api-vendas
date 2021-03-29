@@ -1,9 +1,6 @@
 package br.com.tirabassi.api.vendas.controllers;
 
-import br.com.tirabassi.api.vendas.domain.entity.Cliente;
 import br.com.tirabassi.api.vendas.domain.entity.Pedido;
-import br.com.tirabassi.api.vendas.domain.entity.Produto;
-import br.com.tirabassi.api.vendas.domain.entity.mappers.PedidoMapper;
 import br.com.tirabassi.api.vendas.domain.repositories.PedidoRepository;
 import br.com.tirabassi.api.vendas.domain.services.PedidoService;
 import br.com.tirabassi.api.vendas.model.PedidoDTO;
@@ -48,5 +45,5 @@ public class PedidoController {
         return pedidoRepository.findAll(example);
 
     }
-    
+
 }
