@@ -1,6 +1,7 @@
 package br.com.tirabassi.api.vendas.domain.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Pedido")
+@NoArgsConstructor
 public class Pedido {
 
     @Id
@@ -32,4 +34,18 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido")
     private Set<ItemPedido> itens;
 
+    public Pedido(Cliente cliente, LocalDate dataPedido, BigDecimal valorTotal) {
+        this.cliente = cliente;
+        this.dataPedido = dataPedido;
+        this.valorTotal = valorTotal;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", dataPedido=" + dataPedido +
+                ", valorTotal=" + valorTotal +
+                '}';
+    }
 }
