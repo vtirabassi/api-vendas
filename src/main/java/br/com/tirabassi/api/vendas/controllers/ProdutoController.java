@@ -62,13 +62,12 @@ public class ProdutoController {
 
     @DeleteMapping("{produtoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduto(@PathVariable Integer produtoId, @RequestBody Produto produto){
+    public void deleteProduto(@PathVariable Integer produtoId){
 
         produtoRepository.findById(produtoId)
                 .map(p -> {
-                    produto.setId(p.getId());
                     produtoRepository.deleteById(p.getId());
-                    return produto;
+                    return Void.class;
                 }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
     }
 
