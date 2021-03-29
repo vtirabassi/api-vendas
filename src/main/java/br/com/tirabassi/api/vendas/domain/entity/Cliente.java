@@ -1,5 +1,7 @@
 package br.com.tirabassi.api.vendas.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +12,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Cliente")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Cliente {
 
     @Id
@@ -20,7 +23,11 @@ public class Cliente {
     @Column(name = "nome", length = 100)
     private String nome;
 
+    @Column(name = "cpf", length = 11)
+    private String cpf;
+
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Pedido> pedidos;
 
     public Cliente() {
@@ -30,9 +37,10 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public Cliente(Integer id, String nome) {
+    public Cliente(Integer id, String nome, String cpf) {
         this.id = id;
         this.nome = nome;
+        this.cpf = cpf;
     }
 
     @Override
@@ -40,6 +48,7 @@ public class Cliente {
         return "Cliente{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
                 '}';
     }
 }
