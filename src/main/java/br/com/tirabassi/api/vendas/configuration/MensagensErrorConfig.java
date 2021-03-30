@@ -11,7 +11,6 @@ import java.util.Locale;
 @Component
 public class MensagensErrorConfig {
 
-
     @Bean
     public MessageSource messageSource(){
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
