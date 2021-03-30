@@ -1,6 +1,7 @@
 package br.com.tirabassi.api.vendas.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,8 +11,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
 public class Error {
 
     private OffsetDateTime dataHora;

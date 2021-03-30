@@ -1,6 +1,7 @@
 package br.com.tirabassi.api.vendas.configuration;
 
 import br.com.tirabassi.api.vendas.domain.services.impl.UsuarioServiceImpl;
+import br.com.tirabassi.api.vendas.exceptionhandler.ForbiddenExceptionHandler;
 import br.com.tirabassi.api.vendas.security.JwtAuthFilter;
 import br.com.tirabassi.api.vendas.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,7 +27,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtService jwtService;
 
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -34,6 +35,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public OncePerRequestFilter jtwFilter(){
         return new JwtAuthFilter(jwtService, userService);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new ForbiddenExceptionHandler();
     }
 
     @Override
@@ -61,9 +67,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest()
                         .authenticated()
                 .and()
+                    .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
+                .and()
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .addFilterBefore(jtwFilter(), UsernamePasswordAuthenticationFilter.class);
+
     }
+
+
 }

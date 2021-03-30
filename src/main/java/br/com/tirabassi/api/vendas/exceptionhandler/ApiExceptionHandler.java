@@ -7,6 +7,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,11 +18,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 @RestControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
     @Autowired
     private MessageSource messageSource;
@@ -31,10 +37,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-        Error error = new Error();
-        error.setDataHora(OffsetDateTime.now());
-        error.setStatus(httpStatus.value());
-        error.setMensagem(ex.getMessage());
+        Error error =
+                Error.builder()
+                .dataHora(OffsetDateTime.now())
+                .status(httpStatus.value())
+                .mensagem(ex.getMessage())
+                .build();
 
         return error;
     }
@@ -42,10 +50,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        Error error = new Error();
-        error.setDataHora(OffsetDateTime.now());
-        error.setStatus(status.value());
-        error.setMensagem("Uma ou mais campos estão invalidos");
+        Error error = Error.builder()
+                .dataHora(OffsetDateTime.now())
+                .status(status.value())
+                .mensagem("Uma ou mais campos estão invalidos")
+                .build();
 
         var campoErrors = new ArrayList<CampoError>();
 
