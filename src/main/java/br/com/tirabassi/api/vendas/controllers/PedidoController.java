@@ -1,9 +1,12 @@
 package br.com.tirabassi.api.vendas.controllers;
 
 import br.com.tirabassi.api.vendas.domain.entity.Pedido;
+import br.com.tirabassi.api.vendas.domain.enums.StatusPedido;
 import br.com.tirabassi.api.vendas.domain.repositories.PedidoRepository;
 import br.com.tirabassi.api.vendas.domain.services.PedidoService;
-import br.com.tirabassi.api.vendas.model.PedidoDTO;
+import br.com.tirabassi.api.vendas.model.request.PedidoDTO;
+import br.com.tirabassi.api.vendas.model.request.StatusPedidoDTO;
+import br.com.tirabassi.api.vendas.model.response.PedidoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -32,18 +35,18 @@ public class PedidoController {
         return pedidoService.createPedido(request);
     }
 
-    @GetMapping
-    public List<Pedido> get(Pedido request){
-
-        ExampleMatcher exampleMatcher = ExampleMatcher
-                .matching()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-
-        Example example = Example.of(request, exampleMatcher);
-
-        return pedidoRepository.findAll(example);
-
+    @GetMapping("{pedidoId}")
+    public PedidoResponseDTO getById(@PathVariable Integer pedidoId){
+        return pedidoService.getPedidoCompletoById(pedidoId);
     }
+
+    //TODO: ajuste na rota
+   @PatchMapping("{pedidoId}/atualizar")
+   @ResponseStatus(HttpStatus.NO_CONTENT)
+   public void updateStatus(@PathVariable("pedidoId") Integer pedidoId,
+                            @RequestBody StatusPedidoDTO statusPedido){
+
+        pedidoService.atualizarStatusById(pedidoId, statusPedido);
+   }
 
 }

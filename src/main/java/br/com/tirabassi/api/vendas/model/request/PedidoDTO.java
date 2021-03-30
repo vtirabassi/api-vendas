@@ -1,5 +1,6 @@
-package br.com.tirabassi.api.vendas.model;
+package br.com.tirabassi.api.vendas.model.request;
 
+import br.com.tirabassi.api.vendas.model.request.ItemPedidoDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

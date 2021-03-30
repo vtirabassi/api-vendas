@@ -1,5 +1,6 @@
 package br.com.tirabassi.api.vendas.domain.entity;
 
+import br.com.tirabassi.api.vendas.domain.enums.StatusPedido;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,10 @@ public class Pedido {
 
     @Column(name = "total", columnDefinition = "DECIMAL(10,2)")
     private BigDecimal valorTotal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusPedido statusPedido;
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens;

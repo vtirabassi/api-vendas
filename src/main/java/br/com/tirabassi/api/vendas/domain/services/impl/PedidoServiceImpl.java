@@ -3,27 +3,24 @@ package br.com.tirabassi.api.vendas.domain.services.impl;
 import br.com.tirabassi.api.vendas.domain.entity.Cliente;
 import br.com.tirabassi.api.vendas.domain.entity.ItemPedido;
 import br.com.tirabassi.api.vendas.domain.entity.Pedido;
-import br.com.tirabassi.api.vendas.domain.entity.Produto;
 import br.com.tirabassi.api.vendas.domain.entity.mappers.ItemPedidoMapper;
+import br.com.tirabassi.api.vendas.domain.entity.mappers.PedidoMapper;
+import br.com.tirabassi.api.vendas.domain.enums.StatusPedido;
 import br.com.tirabassi.api.vendas.domain.repositories.ClienteRepository;
 import br.com.tirabassi.api.vendas.domain.repositories.ItemPedidoRepository;
 import br.com.tirabassi.api.vendas.domain.repositories.PedidoRepository;
 import br.com.tirabassi.api.vendas.domain.repositories.ProdutoRepository;
 import br.com.tirabassi.api.vendas.domain.services.PedidoService;
 import br.com.tirabassi.api.vendas.exception.NegocioException;
-import br.com.tirabassi.api.vendas.model.PedidoDTO;
-import com.fasterxml.jackson.databind.node.POJONode;
+import br.com.tirabassi.api.vendas.model.request.PedidoDTO;
+import br.com.tirabassi.api.vendas.model.request.StatusPedidoDTO;
+import br.com.tirabassi.api.vendas.model.response.PedidoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,6 +53,7 @@ public class PedidoServiceImpl implements PedidoService {
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setDataPedido(LocalDate.now());
+        pedido.setStatusPedido(StatusPedido.REALIZADO);
         pedido.setValorTotal(dto.getTotal());
 
         List<ItemPedido> itensPedidos = dto.getItens()
@@ -70,6 +68,33 @@ public class PedidoServiceImpl implements PedidoService {
         itemPedidoRepository.saveAll(itensPedidos);
 
         return pedido.getId();
+
+    }
+
+    @Override
+    public PedidoResponseDTO getPedidoCompletoById(Integer pedidoId) {
+
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new NegocioException("Pedido não encontrado: " + pedidoId));
+
+
+        return PedidoMapper.toResponseDTO(pedido);
+    }
+
+    @Override
+    @Transactional
+    public void atualizarStatusById(Integer pedidoId, StatusPedidoDTO statusPedido) {
+
+        pedidoRepository.findById(pedidoId)
+                .map(pedido -> {
+                    pedido.setStatusPedido(StatusPedido.valueOf(statusPedido.getNovoStatus()));
+                    pedidoRepository.save(pedido);
+                    return pedido;
+                })
+                .orElseThrow(() -> new NegocioException("Pedido não encontrado. ID: " + pedidoId));
+
+
+
 
     }
 }

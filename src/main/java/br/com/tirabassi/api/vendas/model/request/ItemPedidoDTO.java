@@ -1,4 +1,4 @@
-package br.com.tirabassi.api.vendas.model;
+package br.com.tirabassi.api.vendas.model.request;
 
 import lombok.Getter;
 import lombok.Setter;
