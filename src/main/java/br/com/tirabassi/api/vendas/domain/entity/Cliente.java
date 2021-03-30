@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 @Getter
@@ -21,9 +23,12 @@ public class Cliente {
     private Integer id;
 
     @Column(name = "nome", length = 100)
+    @NotEmpty(message = "{cliente.nome.obrigatorio}")
     private String nome;
 
     @Column(name = "cpf", length = 11)
+    @NotEmpty(message = "{cliente.cpf.obrigatorio}")
+    @CPF(message = "{cliente.cpf.valido}")
     private String cpf;
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)

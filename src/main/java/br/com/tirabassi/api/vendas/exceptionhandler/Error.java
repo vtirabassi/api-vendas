@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class Error {
 
     private OffsetDateTime dataHora;
     private Integer status;
-    private String titulo;
     private String mensagem;
+    private List<CampoError> camposErrors;
 
 }

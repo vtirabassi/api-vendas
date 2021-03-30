@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,9 +47,10 @@ public class ClienteController {
 
     }
 
+    //TODO: REGEX CPF para somente letras
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente createCliente(@RequestBody Cliente request){
+    public Cliente createCliente(@RequestBody @Valid Cliente request){
         return clienteRepository.save(request);
     }
 
@@ -66,7 +68,7 @@ public class ClienteController {
 
     @PutMapping("{clienteId}")
     @ResponseStatus(HttpStatus.OK)
-    public Cliente updateCliente(@PathVariable Integer clienteId, @RequestBody Cliente request) {
+    public Cliente updateCliente(@PathVariable Integer clienteId, @RequestBody @Valid Cliente request) {
 
         Optional<Cliente> cliente = clienteRepository.findById(clienteId);
 

@@ -13,6 +13,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Integer createPedido(@RequestBody PedidoDTO request){
+    public Integer createPedido(@RequestBody @Valid PedidoDTO request){
         return pedidoService.createPedido(request);
     }
 
@@ -44,7 +45,7 @@ public class PedidoController {
    @PatchMapping("{pedidoId}/atualizar")
    @ResponseStatus(HttpStatus.NO_CONTENT)
    public void updateStatus(@PathVariable("pedidoId") Integer pedidoId,
-                            @RequestBody StatusPedidoDTO statusPedido){
+                            @RequestBody @Valid StatusPedidoDTO statusPedido){
 
         pedidoService.atualizarStatusById(pedidoId, statusPedido);
    }

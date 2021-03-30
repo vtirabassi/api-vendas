@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Getter
@@ -19,9 +21,11 @@ public class Produto {
     private Integer id;
 
     @Column(name = "descricao")
+    @NotEmpty(message = "{produto.descricao.obrigatorio}")
     private String descricao;
 
     @Column(name = "preco_unitario")
     @JsonProperty(value = "preco_unitario")
+    @NotNull(message = "{produto.preco.obrigatorio}")
     private BigDecimal preco;
 }
