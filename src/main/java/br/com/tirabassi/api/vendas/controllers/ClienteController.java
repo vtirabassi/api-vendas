@@ -2,6 +2,10 @@ package br.com.tirabassi.api.vendas.controllers;
 
 import br.com.tirabassi.api.vendas.domain.entity.Cliente;
 import br.com.tirabassi.api.vendas.domain.repositories.ClienteRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -16,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/clientes")
+@Api("API Clientes")
 public class ClienteController {
 
     private ClienteRepository clienteRepository;
@@ -25,6 +30,11 @@ public class ClienteController {
         this.clienteRepository = clienteRepository;
     }
 
+    @ApiOperation("Obter Clientes")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Clientes encontrados"),
+            @ApiResponse(code = 404, message = "Clientes não encontrados")
+    })
     @GetMapping()
     public List<Cliente> get(Cliente request){
 
@@ -39,6 +49,11 @@ public class ClienteController {
 
     }
 
+    @ApiOperation("Obter dados de um cliente")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cliente encontrado"),
+            @ApiResponse(code = 404, message = "Cliente não encontrado")
+    })
     @GetMapping(value = "{clienteId}")
     public Cliente getClienteById(@PathVariable("clienteId") Integer clienteId){
 
@@ -48,12 +63,22 @@ public class ClienteController {
     }
 
     //TODO: REGEX CPF para somente letras
+    @ApiOperation("Criar um cliente")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Cliente criado"),
+            @ApiResponse(code = 400, message = "Erro de validações")
+    })
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente createCliente(@RequestBody @Valid Cliente request){
         return clienteRepository.save(request);
     }
 
+    @ApiOperation("Deletar um cliente")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Cliente deletado"),
+            @ApiResponse(code = 404, message = "Cliente não encontrado")
+    })
     @DeleteMapping(value = "{clienteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCliente(@PathVariable Integer clienteId) throws ResponseStatusException{
@@ -66,6 +91,11 @@ public class ClienteController {
 
     }
 
+    @ApiOperation("Atualizar um cliente")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cliente atualizado"),
+            @ApiResponse(code = 404, message = "Cliente não encontrado")
+    })
     @PutMapping("{clienteId}")
     @ResponseStatus(HttpStatus.OK)
     public Cliente updateCliente(@PathVariable Integer clienteId, @RequestBody @Valid Cliente request) {
